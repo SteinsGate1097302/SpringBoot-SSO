@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Login</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+
+<h2>Login</h2>
+
+<form id="loginForm">
+    <div>
+        <label for="username">Username:</label>
+        <input type="text" id="username" name="username" required />
+    </div>
+    <div>
+        <label for="password">Password:</label>
+        <input type="password" id="password" name="password" required />
+    </div>
+    <div>
+        <button type="button" onclick="login()">Login</button>
+    </div>
+</form>
+
+<script>
+    function login() {
+        console.log("login.....")
+        var username = $('#username').val();
+        var password = $('#password').val();
+        var redirectUrl = new URLSearchParams(window.location.search).get('redirect'); // 获取redirect参数
+
+        $.ajax({
+            url: 'http://localhost:8080/sso/login?redirect=' + redirectUrl,
+            type: 'POST',
+            contentType: 'application/json',
+            data: JSON.stringify({username: username, password: password}),
+            success: function(response) {
+                // 登录成功处理逻辑
+                console.log("Login success:", response);
+                // 可能的操作：页面跳转等
+                window.location.href = response; // 前端执行重定向
+            },
+            error: function(xhr, status, error) {
+                // 登录失败处理逻辑
+                console.error("Login failed:", error);
+            }
+        });
+    }
+</script>
+
+</body>
+</html>
